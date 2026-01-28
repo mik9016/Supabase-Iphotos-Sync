@@ -72,15 +72,27 @@ You can install this app on your iPhone without a paid Apple Developer account u
 
 | Account Type | App Validity | Notes |
 |--------------|--------------|-------|
-| **Free Apple ID** | **7 days** | Must reinstall weekly from Xcode |
+| **Free Apple ID** | **7 days** | Must reinstall weekly |
 | **Paid Developer ($99/year)** | **1 year** | Can also distribute via TestFlight |
 
-With a free account, after 7 days the app will stop opening. Simply:
-1. Connect iPhone to Mac
-2. Open Xcode
-3. Build and run again (`Cmd + R`)
+With a free account, after 7 days the app will stop opening.
 
-Your data and login will be preserved.
+### Quick Reinstall (No Xcode GUI needed)
+
+Install the helper tool once:
+```bash
+brew install ios-deploy
+```
+
+Then whenever the app expires:
+```bash
+# Connect iPhone via USB, then:
+./reinstall.sh
+```
+
+That's it! The script builds and installs the app automatically. Takes about 30-60 seconds.
+
+Your data and login will be preserved between reinstalls.
 
 ---
 
