@@ -41,6 +41,7 @@ final class SyncManager: ObservableObject, BackgroundUploadDelegate, TUSUploadDe
     private let backgroundUploader = BackgroundUploadManager.shared
     private let tusUploader = TUSUploadManager.shared
     private let metadataService = PhotoMetadataService.shared
+    private let thumbnailService = ThumbnailService.shared
     private let settings = AppSettings.shared
 
     // For manual photo selection
@@ -380,13 +381,60 @@ final class SyncManager: ObservableObject, BackgroundUploadDelegate, TUSUploadDe
 
         Task {
             do {
-                try await metadataService.saveMetadata(for: photo, storagePath: storagePath)
+                // Generate and upload thumbnail
+                var thumbnailPath: String? = nil
+                if let thumbnailData = await thumbnailService.generateThumbnail(for: photo.asset) {
+                    let thumbFilename = thumbnailFilename(for: photo.filename)
+                    thumbnailPath = "\(SupabaseAuthService.bucketName)/\(userId)/thumbnails/\(thumbFilename)"
+
+                    // Upload thumbnail
+                    try await uploadThumbnail(data: thumbnailData, path: "\(userId)/thumbnails/\(thumbFilename)")
+
+                    #if DEBUG
+                    print("Thumbnail uploaded for: \(photo.filename)")
+                    #endif
+                }
+
+                try await metadataService.saveMetadata(for: photo, storagePath: storagePath, thumbnailPath: thumbnailPath)
             } catch {
                 #if DEBUG
                 print("Failed to save metadata for \(photo.filename): \(error.localizedDescription)")
                 #endif
                 // Don't fail the sync - metadata is supplementary
             }
+        }
+    }
+
+    /// Convert original filename to thumbnail filename (always .jpg)
+    private func thumbnailFilename(for originalFilename: String) -> String {
+        let name = (originalFilename as NSString).deletingPathExtension
+        return "\(name)_thumb.jpg"
+    }
+
+    /// Upload thumbnail data directly to Supabase storage
+    private func uploadThumbnail(data: Data, path: String) async throws {
+        guard let accessToken = SupabaseAuthService.shared.accessToken else {
+            throw NSError(domain: "SyncManager", code: 401, userInfo: [NSLocalizedDescriptionKey: "Not authenticated"])
+        }
+
+        let urlString = "\(SupabaseAuthService.supabaseURL)/storage/v1/object/\(SupabaseAuthService.bucketName)/\(path)"
+        guard let url = URL(string: urlString) else {
+            throw NSError(domain: "SyncManager", code: 400, userInfo: [NSLocalizedDescriptionKey: "Invalid URL"])
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("image/jpeg", forHTTPHeaderField: "Content-Type")
+        request.setValue(SupabaseAuthService.anonKey, forHTTPHeaderField: "apikey")
+        request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        request.httpBody = data
+
+        let (_, response) = try await URLSession.shared.data(for: request)
+
+        guard let httpResponse = response as? HTTPURLResponse,
+              httpResponse.statusCode >= 200 && httpResponse.statusCode < 300 else {
+            let statusCode = (response as? HTTPURLResponse)?.statusCode ?? 0
+            throw NSError(domain: "SyncManager", code: statusCode, userInfo: [NSLocalizedDescriptionKey: "Thumbnail upload failed with status \(statusCode)"])
         }
     }
 

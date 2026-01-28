@@ -12,6 +12,7 @@
 		317932CB2F2A2293009929BC /* PhotoPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317932CA2F2A2293009929BC /* PhotoPickerView.swift */; };
 		317932CE2F2A26BE009929BC /* Secrets.swift.template in Resources */ = {isa = PBXBuildFile; fileRef = 317932CD2F2A26BE009929BC /* Secrets.swift.template */; };
 		317932CF2F2A26BE009929BC /* Secrets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317932CC2F2A26BE009929BC /* Secrets.swift */; };
+		317932D12F2A3CAA009929BC /* ThumbnailService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317932D02F2A3CAA009929BC /* ThumbnailService.swift */; };
 		A1000001 /* IPhotosSyncApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000001 /* IPhotosSyncApp.swift */; };
 		A1000002 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000002 /* AppDelegate.swift */; };
 		A1000003 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000003 /* ContentView.swift */; };
@@ -37,6 +38,7 @@
 		317932CA2F2A2293009929BC /* PhotoPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoPickerView.swift; sourceTree = "<group>"; };
 		317932CC2F2A26BE009929BC /* Secrets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Secrets.swift; sourceTree = "<group>"; };
 		317932CD2F2A26BE009929BC /* Secrets.swift.template */ = {isa = PBXFileReference; lastKnownFileType = text; path = Secrets.swift.template; sourceTree = "<group>"; };
+		317932D02F2A3CAA009929BC /* ThumbnailService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailService.swift; sourceTree = "<group>"; };
 		A2000001 /* IPhotosSyncApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPhotosSyncApp.swift; sourceTree = "<group>"; };
 		A2000002 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A2000003 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -114,6 +116,7 @@
 		A5000004 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				317932D02F2A3CAA009929BC /* ThumbnailService.swift */,
 				317932BA2F2A21D2009929BC /* PhotoMetadataService.swift */,
 				317932B72F2A16D8009929BC /* TUSUploadManager.swift */,
 				A2000018 /* BackgroundUploadManager.swift */,
@@ -233,6 +236,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				317932D12F2A3CAA009929BC /* ThumbnailService.swift in Sources */,
 				A1000001 /* IPhotosSyncApp.swift in Sources */,
 				317932CF2F2A26BE009929BC /* Secrets.swift in Sources */,
 				A1000002 /* AppDelegate.swift in Sources */,
